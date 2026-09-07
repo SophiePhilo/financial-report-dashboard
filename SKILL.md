@@ -1,6 +1,6 @@
 ---
 name: financial-report-dashboard
-description: Create or update a polished, self-contained Chinese financial-results visualization from an earnings PDF, press release, or financial tables. Use for public-company quarterly earnings dashboards that need KPI cards, an income-statement Sankey, comparison charts, guidance, a detailed table, financial reconciliation, and responsive ECharts output. Do not use for generic dashboards unrelated to financial reporting.
+description: Create or update a polished, self-contained Chinese financial-results visualization from an earnings PDF, press release, financial tables, or a company name/ticker when the latest official financial-report source needs to be resolved. Use for public-company quarterly earnings dashboards that need KPI cards, an income-statement Sankey, comparison charts, guidance, a detailed table, financial reconciliation, and responsive ECharts output. Do not use for generic dashboards unrelated to financial reporting.
 ---
 
 # Financial Report Dashboard
@@ -17,17 +17,23 @@ python3 scripts/scaffold_dashboard.py OUTPUT_DIRECTORY
 
 The scaffold is a working NVIDIA example, not neutral placeholder data. Replace every company-specific value, label, logo asset, period, source note, outlook item, and footnote before delivery. Keep `echarts.min.js` local so the dashboard works offline.
 
+Before resolving a remote financial-report source, read [references/source-acquisition.md](references/source-acquisition.md) for source priority, report selection, download provenance, and verification rules.
+
+For PDF sources, read [references/pdf-ingestion.md](references/pdf-ingestion.md) before extracting or recording financial data. It defines the structured Markdown analysis layer, source-level verification, and discrepancy-handling rules.
+
 Before adapting the scaffold, read [references/dashboard-adaptation.md](references/dashboard-adaptation.md). It defines unit conversion, period selection, accounting flow, color semantics, and validation requirements. Before styling or visual review, also read [references/visual-polish.md](references/visual-polish.md) for the required readable type hierarchy, Sankey label handling, and company-logo treatment.
 
 ## Workflow
 
-1. Inspect the source document and any user-provided reference dashboard. Preserve the requested output directory and unrelated files.
-2. Extract tables with a layout-preserving PDF tool when available. Build a small data audit containing current period, comparison period, units, GAAP/Non-GAAP status, and whether each value is reported or derived.
-3. Scaffold the dashboard, then adapt `index.html` and `app.js`. Prefer changing the template over rewriting it unless the user's reference calls for a materially different structure.
-4. Use the company's brand color for identity and chart categories. Obtain an official company logo, store it locally, and place it on the Sankey with no visible background container. Use red for increases and green for decreases only where the visual encodes change, following the Chinese-market convention.
-5. Keep reported values distinct from derived values. Identify inferred business-segment figures or rounding differences in the page notes.
-6. Verify accounting identities, displayed units, period labels, and GAAP/Non-GAAP comparability before visual review.
-7. Run JavaScript syntax and runtime smoke checks. Render desktop and mobile screenshots when a browser is available; inspect text legibility, the full Sankey after animations finish, and the logo's transparency, placement, and non-interference with chart interaction.
+1. Resolve the source document and inspect any user-provided reference dashboard. If the user provides a company name or ticker but no report, locate the latest official earnings release or financial-report source, prioritizing the company's investor-relations website and first-party regulatory filings. Confirm the company, reporting period, publication date, and report type before using it.
+2. When the selected source is remote, download the original report into the working directory and preserve it for verification. Record its title, source URL, reporting period, publication date, and retrieval date. Preserve the requested output directory and unrelated files.
+3. For PDF sources, convert the document to a structured Markdown representation with an available document-conversion tool. Use the Markdown as the primary layer for text search and analysis while retaining the original PDF as the authoritative source for verification.
+4. For dense, layout-sensitive, or financially material tables, verify extracted values against the original PDF or a layout-preserving extraction before recording them. Build a small data audit containing the current period, comparison period, units, GAAP/Non-GAAP status, source location, and whether each value is reported or derived.
+5. Scaffold the dashboard, then adapt `index.html` and `app.js`. Prefer changing the template over rewriting it unless the user's reference calls for a materially different structure.
+6. Use the company's brand color for identity and chart categories. Obtain an official company logo, store it locally, and place it on the Sankey with no visible background container. Use red for increases and green for decreases only where the visual encodes change, following the Chinese-market convention.
+7. Keep reported values distinct from derived values. Identify inferred business-segment figures or rounding differences in the page notes.
+8. Verify accounting identities, displayed units, period labels, source consistency, and GAAP/Non-GAAP comparability before visual review.
+9. Run JavaScript syntax and runtime smoke checks. Render desktop and mobile screenshots when a browser is available; inspect text legibility, the full Sankey after animations finish, and the logo's transparency, placement, and non-interference with chart interaction.
 
 ## Delivery standard
 
