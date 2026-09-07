@@ -1,10 +1,12 @@
 # Financial Report Dashboard
 
-财报可视化 Skill：从上市公司财报 PDF、业绩新闻稿或财务表格中提取数据，生成可审计、可离线运行、适配桌面与移动端的中文 ECharts 看板。
+财报可视化 Skill：可从上市公司财报 PDF、业绩新闻稿、财务表格，或仅根据公司名称 / 股票代码定位最新官方财报来源，提取并核验财务数据，生成可审计、可离线运行、适配桌面与移动端的中文 ECharts 看板。
 
 
 ## 主要能力
 
+- 仅提供公司名称或股票代码时，优先从公司 IR、监管披露或交易所官方来源定位最新财报
+- 对 PDF 建立结构化 Markdown 分析层，并对关键财务表格回查原始 PDF
 - 提炼营业收入、营业利润、净利润等核心 KPI
 - 用桑基图展示收入、成本、费用与利润流向
 - 对比业务收入构成、费用结构和现金流
@@ -31,6 +33,8 @@ financial-report-dashboard/
 │       ├── echarts.min.js
 │       └── company-logo.png         # 桑基图透明 Logo 示例，适配时必须替换
 ├── references/
+│   ├── source-acquisition.md        # 官方财报来源检索、选择与来源记录规则
+│   ├── pdf-ingestion.md             # PDF 结构化解析与原始财务数据核验规则
 │   ├── dashboard-adaptation.md      # 数据口径、颜色和验收规则
 │   └── visual-polish.md             # 字体、桑基图标签与透明 Logo 规范
 ├── scripts/
@@ -85,6 +89,15 @@ cp -R financial-report-dashboard .claude/skills/
 
 ## 使用示例
 
+仅提供公司名称或股票代码时，Skill 也可以自行定位并核验最新官方财报来源：
+
+```text
+使用 $financial-report-dashboard，为 NVIDIA（NVDA）生成最新季度中文财报可视化。
+请自行定位并核验最新官方财报来源。
+```
+
+如果已经有财报文件，也可以直接指定本地 PDF：
+
 ```text
 使用 $financial-report-dashboard，根据 ./reports/company-q2.pdf，
 在 ./output/company-q2 目录创建中文财报可视化。
@@ -128,15 +141,17 @@ python3 scripts/scaffold_dashboard.py ./output/company-q2
 
 ## 推荐工作流
 
-1. 读取财报 PDF，确认财期、币种、原始数据单位及比较期间。
-2. 使用脚手架创建离线页面。
-3. 将金额统一换算为目标单位，再写入 `app.js`，不能只修改单位文字。
-4. 根据财报科目调整 KPI、桑基图节点、对比图和数据表。
-5. 核对 GAAP / Non-GAAP 口径与衔接关系。
-6. 运行语法、勾稽和浏览器截图检查。
-7. 搜索并清除 NVIDIA 示例名称、日期和数字。
+1. 获取财报来源：如用户仅提供公司名称或股票代码，优先从公司 IR、监管披露或交易所官方来源定位最新财报，并确认财期、发布日期和报告类型。
+2. 保留原始来源文件；对于 PDF，创建结构化 Markdown 表示，用于检索和文本分析。
+3. 对关键财务表格、GAAP / Non-GAAP 调节项及重要 KPI 回查原始 PDF 或保留版式的提取结果。
+4. 使用脚手架创建离线页面。
+5. 将金额统一换算为目标单位，再写入 `app.js`，不能只修改单位文字。
+6. 根据财报科目调整 KPI、桑基图节点、对比图和数据表。
+7. 核对 GAAP / Non-GAAP 口径、财务勾稽关系及来源一致性。
+8. 运行语法、勾稽和浏览器截图检查。
+9. 搜索并清除 NVIDIA 示例名称、日期和数字。
 
-完整规则见 [dashboard-adaptation.md](references/dashboard-adaptation.md) 与 [visual-polish.md](references/visual-polish.md)。
+完整规则见 [source-acquisition.md](references/source-acquisition.md)、[pdf-ingestion.md](references/pdf-ingestion.md)、[dashboard-adaptation.md](references/dashboard-adaptation.md) 与 [visual-polish.md](references/visual-polish.md)。
 
 ## 数据与视觉约定
 
